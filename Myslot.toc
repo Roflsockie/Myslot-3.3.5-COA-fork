@@ -1,0 +1,30 @@
+## Interface: 30300
+## Title: Myslot
+## Title-ruRU: Myslot
+## Notes: Export and import action bar layouts, keybindings and macros between characters. Fork for Ascension / Conquest of Azeroth (3.3.5a). https://github.com/Roflsockie/Myslot-3.3.5-COA-fork
+## Notes-ruRU: Экспорт и импорт раскладки панелей, клавиш и макросов между персонажами. Форк для Ascension / Conquest of Azeroth (3.3.5a). https://github.com/Roflsockie/Myslot-3.3.5-COA-fork
+## Author: Boshi Lian (farmer1992@gmail.com) — original; fork by Miss Click
+## X-Fork-Author: Miss Click
+## X-Repository: https://github.com/Roflsockie/Myslot-3.3.5-COA-fork
+## Version: 6.3.0-335a
+## SavedVariables: MyslotExports
+## SavedVariablesPerCharacter: MyslotSettings
+## IconTexture: Interface\AddOns\Myslot\Myslot.blp
+
+compat_335.lua
+libs\LibStub\LibStub.lua
+libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
+libs\base64.lua
+libs\crc32.lua
+libs\lua-pb\lua-pb.xml
+protobuf\Myslot.lua
+
+event.lua
+locales.lua
+keys.lua
+Myslot.lua
+gui.lua
+share.lua
+options.lua
