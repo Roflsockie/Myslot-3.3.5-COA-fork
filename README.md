@@ -1,63 +1,65 @@
 # Myslot 3.3.5 COA fork
 
-Форк [Myslot 6.3.0](https://github.com/tg123/myslot) для WoW 3.3.5a / Ascension / Conquest of Azeroth (`## Interface: 30300`).
+A fork of [Myslot 6.3.0](https://github.com/tg123/myslot) for WoW 3.3.5a / Ascension / Conquest of Azeroth (`## Interface: 30300`).
 
-Аддон переносит между персонажами раскладку панелей действий, макросы и привязки клавиш — включая бинды самих панелей (`ACTIONBUTTON*`, `MULTIACTIONBAR*`), чего нет в ActionBar Saver.
+The addon transfers action bar layouts, macros and keybindings between characters — including the keybindings of the action buttons themselves (`ACTIONBUTTON*`, `MULTIACTIONBAR*`), which ActionBar Saver does not provide.
 
-## Авторы и благодарности
+Русская версия: [README_RU.md](README_RU.md).
 
-- **Оригинальный аддон:** Boshi Lian (farmer1992@gmail.com), <https://github.com/tg123/myslot>. Автор оригинала сохранён в `Myslot.toc` и в коде.
-- **Автор форка:** Miss Click.
-- Репозиторий форка: <https://github.com/Roflsockie/Myslot-3.3.5-COA-fork>.
-- Лицензия оригинала (Apache 2.0) сохранена в `LICENSE`.
+## Credits
 
-## Что работает
+- **Original addon:** Boshi Lian (farmer1992@gmail.com), <https://github.com/tg123/myslot>. The original author is kept in `Myslot.toc` and in the source code.
+- **Fork author:** Miss Click.
+- Fork repository: <https://github.com/Roflsockie/Myslot-3.3.5-COA-fork>.
+- The original Apache 2.0 license is kept in `LICENSE`.
 
-- Экспорт/импорт панелей: заклинания, макросы, предметы, pets, компаньоны, маунты, flyout, пустые ячейки.
-- Макросы: глобальная вкладка и вкладка персонажа как два разных набора (36 + 18 слотов).
-- Привязки клавиш, включая бинды action-кнопок и мультипанелей.
-- Профили: сохранение, загрузка, переименование, удаление, шеринг через чат.
-- Настройки ignoring (Action Bars / Key Binding / Macro / CVars) в меню Import и Export и в панели настроек.
-- Иконка у мини-карты, окно настроек через Interface Options.
+## Features
 
-## Отличия от оригинальной версии 6.3.0
+- Export/import of action bars: spells, macros, items, pets, companions, mounts, flyouts and empty slots.
+- Macros: the General tab and the per-character tab are two separate sets (36 + 18 slots).
+- Keybindings, including bindings of action buttons and multi-action bars.
+- Profiles: save, load, rename, delete and share through chat links.
+- Ignore settings (Action Bars / Key Binding / Macro / CVars) in both Import and Export menus and in the options panel.
+- Minimap icon and an options panel under Interface Options.
 
-1. **Только 3.3.5a.** В TOC указан `Interface: 30300` вместо набора retail-флаворов. Всё, чего нет в 3.3.5, выключено guard-условиями, а не вызывает ошибок.
+## Differences from the original 6.3.0
 
-2. **`compat_335.lua` загружается первым.** Небольшой слой совместимости:
-   - `tAppendAll`, `IsPetActive()` через `PetHasActionBar()`;
-   - `WrapTextInColorCode` для цветовых констант шрифта;
-   - `C_Timer` (`After`, `NewTimer`, `NewTicker` с `:Cancel()`) на базе скрытого OnUpdate-драйвера;
-   - `C_UI.Reload`, плоские обёртки `C_EquipmentSet.*`;
-   - приватный `MyslotCompatSettings` вместо глобального `Settings` — глобальный `Settings` заставляет AceConfigDialog и LibCompat других аддонов включать retail-ветки и падать;
-   - меню `MenuUtil` / `Menu` / `AnchorUtil` поверх классического `UIDropDownMenu`.
+1. **3.3.5a only.** The TOC declares `Interface: 30300` instead of the retail flavor list. Everything absent in 3.3.5 is disabled by guards instead of throwing errors.
 
-3. **Восстановление заклинаний по имени.** В 3.3.5 `PickupSpell` принимает слот книги заклинаний, а не ID. Форк строит карту `имя → слот` через `GetSpellTabInfo` + `GetSpellName` (как ActionBar Saver) и добавляет имя заклинания в экспорт. Неизученный талант не подменяется случайным скиллом: ячейка очищается и печатается предупреждение.
+2. **`compat_335.lua` loads first.** A small compatibility layer provides:
+   - `tAppendAll`, `IsPetActive()` via `PetHasActionBar()`;
+   - `WrapTextInColorCode` for the font color constants;
+   - `C_Timer` (`After`, `NewTimer`, `NewTicker` with `:Cancel()`) driven by a hidden OnUpdate frame;
+   - `C_UI.Reload` and flat `C_EquipmentSet.*` wrappers;
+   - a private `MyslotCompatSettings` instead of a global `Settings` — a global one makes AceConfigDialog and LibCompat in other addons take retail code paths and fail;
+   - `MenuUtil` / `Menu` / `AnchorUtil` rendered through the classic `UIDropDownMenu`.
 
-4. **Макросы.** Путь иконки преобразуется в числовой индекс через `GetMacroIconInfo`. Глобальная и персональная вкладки не схлопываются: константы 36/18 зафиксированы, поиск макроса учитывает вкладку. Экспорт содержит обе вкладки.
+3. **Spells are restored by name.** In 3.3.5 `PickupSpell` takes a spellbook slot, not a spell ID. The fork builds a `name → slot` map with `GetSpellTabInfo` + `GetSpellName` (the same way ActionBar Saver does) and stores the spell name in the export. An unlearned talent is never replaced by a random spell: the slot is cleared and a warning is printed.
 
-5. **Бинды.** `GetBinding(index)` + `GetBindingKey(command)` вместо `GetBinding(index, true)` (в 3.3.5 второй аргумент — режим привязок). `SetBinding` не получает retail-контекст. Благодаря этому бинды панелей экспортируются и восстанавливаются.
+4. **Macros.** Icon texture paths are converted to numeric indices via `GetMacroIconInfo`. Global and per-character tabs no longer collapse into one: the 36/18 slot constants are fixed and macro lookup is scoped to the source tab. Exports contain both tabs.
 
-6. **Меню.** Обновление галочек закрывает все открытые уровни `UIDropDownMenu` перед пересборкой, поэтому окно не дублируется при каждом клике.
+5. **Keybindings.** `GetBinding(index)` + `GetBindingKey(command)` are used instead of `GetBinding(index, true)` (the second argument is a binding mode in 3.3.5). `SetBinding` is called without a retail context. As a result, action bar bindings are exported and restored correctly.
 
-7. **Мелкие правки GUI.** Стрелки Import/Export рисуются в слое `OVERLAY`, текстовое поле экспорта получает фокус по клику (Ctrl+C работает).
+6. **Menus.** Refreshing a checkbox closes all open `UIDropDownMenu` levels before rebuilding, so the menu window is not duplicated on every click.
 
-8. **Retail-функции, которых нет в 3.3.5:** применение loadout-ов талантов, Cooldown Manager, click bindings, transmog-аутфиты, `C_PetJournal` / `C_MountJournal`. Как и в оригинале для классических клиентов, в шапке экспорта остаётся распределение очков талантов `0/0/0`.
+7. **Small GUI fixes.** The Import/Export arrows are drawn in the `OVERLAY` layer, and the export edit box takes focus on click so Ctrl+C works.
 
-9. **Ссылка для фидбека** в `Myslot.toc`, в окне настроек и в шапке экспорта заменена на URL этого репозитория.
+8. **Retail-only features are unavailable in 3.3.5:** talent loadout application, Cooldown Manager, click bindings, transmog outfits, `C_PetJournal` / `C_MountJournal`. As in the original for classic clients, the talent point spread (`0/0/0`) is still written to the export header.
 
-## Установка
+9. **Feedback link** in `Myslot.toc`, in the options panel and in the export header now points to this repository.
 
-Скопируйте папку `Myslot` в `World of Warcraft\Interface\AddOns\Myslot` и выполните `/reload`. Имя папки должно остаться `Myslot` — в нём лежат пути иконки и метаданные аддона.
+## Installation
 
-## Проверки
+Copy the `Myslot` folder into `World of Warcraft\Interface\AddOns\Myslot` and run `/reload`. Keep the folder name `Myslot` — the icon path and addon metadata depend on it.
 
-- Статическая проверка вызовов и TOC через `wow335/verify-addon.mjs`: `exit 0`, 0 неразрешённых API, TOC `Interface 30300`.
-- На клиенте CoA 3.3.5 пользователем проверен полный цикл между двумя персонажами: экспорт и импорт панелей скиллов, макросов (обе вкладки) и биндов панелей, а также работа галочек в меню Import/Export.
+## Verification
 
-## Известные ограничения
+- Static call/TOC check with `wow335/verify-addon.mjs`: `exit 0`, 0 unresolved APIs, TOC `Interface 30300`.
+- A full round trip between two characters was tested on the CoA 3.3.5 client by the user: export and import of skill bars, macros (both tabs), action bar keybindings, and the Import/Export checkbox menus.
 
-- Настройки и дельта кастомного Lua API CoA сверены с индексом 3.3.5 и сканами клиента; не документированные серверные возможности могут отличаться.
-- Ветки талантов/аутфитов из retail-версии остаются недоступными на 3.3.5 по объективной причине — соответствующего API в клиенте нет.
+## Known limitations
 
-Фидбек и ошибки: <https://github.com/Roflsockie/Myslot-3.3.5-COA-fork/issues>.
+- Settings and the custom CoA Lua API delta were checked against the 3.3.5 index and client binary scans; undocumented server-side behavior may differ.
+- Retail talent/outfit branches remain unavailable on 3.3.5 because the corresponding APIs do not exist in that client.
+
+Bug reports and feedback: <https://github.com/Roflsockie/Myslot-3.3.5-COA-fork/issues>.
